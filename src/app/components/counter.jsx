@@ -10,11 +10,14 @@ export default class Counter extends React.Component {
   }
 
   counter = (state,action) => {
+    if (typeof state === 'undefined') {
+      return 0;
+    }
     if (action.type === 'INCREMENT') {
       return state+1;
     } else if (action.type === 'DECREMENT') {
       return state-1;
-    }
+    } else return state;
   }
 
   testCounter = (current,next,type) => {
@@ -31,6 +34,8 @@ export default class Counter extends React.Component {
   render () {
     this.testCounter(0,1,'INCREMENT');
     this.testCounter(2,1,'DECREMENT');
+    this.testCounter(1,1,'UNKNOWN');
+    this.testCounter(undefined,0,);
     return <div>
       <h1>Counter</h1>
       <button onClick = {() => this.a()}>alert hello</button>

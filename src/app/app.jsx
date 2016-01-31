@@ -22,8 +22,10 @@ const Counter = ({
   onDecrement,
 }) => (
   <div>
-    <button onClick = {onIncrement}>+</button>
+
     <h1>{value}</h1>
+<button onClick = {onIncrement}>+</button>
+<button onClick = {onDecrement}>-</button>
   </div>
 );
 
@@ -36,6 +38,11 @@ const render = () => {
       onIncrement = {() => {
         store.dispatch ({
           type:'INCREMENT',
+        })
+      }}
+      onDecrement = {() => {
+        store.dispatch ({
+          type:'DECREMENT',
         })
       }}
       />,

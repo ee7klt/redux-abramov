@@ -16,10 +16,14 @@ const counter = (state = 0, action)=> {
 //const {createStore} = redux;
 const store = createStore(counter);
 
-const Counter = ({value}) => (
+const Counter = ({
+  value,
+  onIncrement,
+  onDecrement,
+}) => (
   <div>
-  <button onClick = {counter({value},'INCREMENT')}>+</button>
-  <h1>{value}</h1>
+    <button onClick = {onIncrement}>+</button>
+    <h1>{value}</h1>
   </div>
 );
 
@@ -27,10 +31,21 @@ const Counter = ({value}) => (
 
 const render = () => {
   ReactDOM.render(
-    <Counter value = {store.getState()} />,
+    <Counter
+      value = {store.getState()}
+      onIncrement = {() => {
+        store.dispatch ({
+          type:'INCREMENT',
+        })
+      }}
+      />,
     document.querySelector('#app')
   )
 }
 
 store.subscribe(render);
 render();
+
+//with dummy callback, page is not re-rendered.
+//store.subscribe(() => {});
+//render();

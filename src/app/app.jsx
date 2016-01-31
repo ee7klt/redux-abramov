@@ -1,20 +1,36 @@
-(function () {
-  let React = require('react');
-  let ReactDOM = require('react-dom');
-  let injectTapEventPlugin = require('react-tap-event-plugin');
-  let Main = require('./components/main.jsx'); // Our custom react component
+import {createStore} from 'redux';
+import ReactDOM from 'react-dom';
+import React from 'react';
 
-  //Needed for React Developer Tools
-  window.React = React;
 
-  //Needed for onTouchTap
-  //Can go away when react 1.0 release
-  //Check this repo:
-  //https://github.com/zilverline/react-tap-event-plugin
-  injectTapEventPlugin();
+const counter = (state = 0, action)=> {
+  switch (action.type) {
+    case 'INCREMENT':
+    return state + 1;
+    case 'DECREMENT':
+    return state - 1;
+    default:
+    return state;
+  }
+}
+//const {createStore} = redux;
+const store = createStore(counter);
 
-  // Render the main app react component into the app div.
-  // For more details see: https://facebook.github.io/react/docs/top-level-api.html#react.render
-  ReactDOM.render(<Main />, document.getElementById('app'));
+const Counter = ({value}) => (
+  <div>
+  <button onClick = {counter({value},'INCREMENT')}>+</button>
+  <h1>{value}</h1>
+  </div>
+);
 
-})();
+
+
+const render = () => {
+  ReactDOM.render(
+    <Counter value = {store.getState()} />,
+    document.querySelector('#app')
+  )
+}
+
+store.subscribe(render);
+render();

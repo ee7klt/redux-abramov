@@ -7,19 +7,16 @@ import {createStore} from 'redux';
 export default class Counter extends React.Component {
 
 
+
+
   a = (store) => {
     store.dispatch({type:'INCREMENT'});
-    console.log(store.getState());
-    store.subscribe(this.updateCount(store));
+    //console.log(store.getState());
+    store.subscribe(() => {this.updateCount(store)});
   }
 
-  updateCount =() => {
+  updateCount =(store) => {
     console.log('this is update count');
-    ReactDOM.render(
-      <div>
-      <div>,
-      document.getElementById('root')
-    )
   }
 
   counter = (state = 0,action) => {
@@ -53,7 +50,7 @@ export default class Counter extends React.Component {
     this.testCounter(undefined,0,);
     const store = createStore(this.counter);
     console.log(store.getState());   // 0
-    store.dispatch({type: 'INCREMENT'});
+  //  store.dispatch({type: 'INCREMENT'});
     console.log(store.getState());   // 1
     // store.subscribe(() => {
     //   document.body.innerText = store.getState();
@@ -63,7 +60,7 @@ export default class Counter extends React.Component {
     return <div>
       <h1>Counter</h1>
       <button onClick = {() => this.a(store)}>+</button>
-      <div id = 'root'></div>
+      <div id = 'root'>{store.getState()}</div>
     </div>
   }
 

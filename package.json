@@ -25,7 +25,8 @@
     "webpack": "^1.11.0",
     "webpack-dev-server": "^1.10.1",
     "expect":"*",
-    "redux":"^3.0.4"
+    "redux":"^3.0.4",
+    "deep-freeze":"*"
   },
   "dependencies": {
     "react": "^0.14.0",

@@ -9,7 +9,7 @@ export default class Main extends React.Component {
   render () {
     return <div>
       <h1>Abromov Redux</h1>
-      <Counter />
+  
       </div>
   }
 

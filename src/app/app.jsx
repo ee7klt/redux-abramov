@@ -1,58 +1,18 @@
-import {createStore} from 'redux';
-import ReactDOM from 'react-dom';
-import React from 'react';
 
+import expect, { createSpy, spyOn, isSpy } from 'expect';
 
-const counter = (state = 0, action)=> {
-  switch (action.type) {
-    case 'INCREMENT':
-    return state + 1;
-    case 'DECREMENT':
-    return state - 1;
-    default:
-    return state;
-  }
-}
-//const {createStore} = redux;
-const store = createStore(counter);
+const addCounter = (list) => {
+  list.push(0);
+  return list;
+};
 
-const Counter = ({
-  value,
-  onIncrement,
-  onDecrement,
-}) => (
-  <div>
+const testAddCounter =() => {
+  const listBefore = [];
+  const listAfter = [0];
+  expect(
+    addCounter(listBefore)
+  ).toEqual(listAfter);
+};
 
-    <h1>{value}</h1>
-<button onClick = {onIncrement}>+</button>
-<button onClick = {onDecrement}>-</button>
-  </div>
-);
-
-
-
-const render = () => {
-  ReactDOM.render(
-    <Counter
-      value = {store.getState()}
-      onIncrement = {() => {
-        store.dispatch ({
-          type:'INCREMENT',
-        })
-      }}
-      onDecrement = {() => {
-        store.dispatch ({
-          type:'DECREMENT',
-        })
-      }}
-      />,
-    document.querySelector('#app')
-  )
-}
-
-store.subscribe(render);
-render();
-
-//with dummy callback, page is not re-rendered.
-//store.subscribe(() => {});
-//render();
+testAddCounter();
+console.log('All tests passed.')

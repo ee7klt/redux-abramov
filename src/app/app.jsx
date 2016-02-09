@@ -12,14 +12,23 @@ const todos = (state=[], action) =>{
 
   switch (action.type) {
     case 'ADD_TODO':
+
     return [
       ...state,
       {id: action.id, text: action.text, completed: false},
     ];
     case 'TOGGLE_TODO':
-    return [
-      ...state, {state[action.id]}
-    ];
+    console.log('TOGGLE_TODO switch selected')
+     const i = state.findIndex(x => x.id === action.id);
+     const todo = state[i];
+     const newtodo = {...todo, completed: !todo.completed};
+     console.log(newtodo);
+    return state.splice(i,1,newtodo)
+
+
+    // return [
+    //   ...state, {state[action.id]}
+    // ];
     default:
     return state;
   }
@@ -56,7 +65,10 @@ const testToggleTodo = () => {
 
   const action = {
     type: 'TOGGLE_TODO',
+    id:0,
   }
+
+  //console.log(todos(stateBefore,action))
 
   expect(
     todos(stateBefore, action)

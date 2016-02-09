@@ -16,8 +16,12 @@ const todos = (state=[], action) =>{
       ...state,
       {id: action.id, text: action.text, completed: false},
     ];
+    case 'TOGGLE_TODO':
+    return [
+      ...state, {state[action.id]}
+    ];
     default:
-    return state
+    return state;
   }
 }
 
@@ -33,7 +37,7 @@ const testAddTodo = () => {
     text: 'Learn Redux',
   };
 
-  console.log(action.type)
+  //console.log(action.type)
   const stateAfter = [{id: 0, text:'Learn Redux', completed: false}];
 
   deepFreeze(stateBefore);
@@ -46,5 +50,25 @@ const testAddTodo = () => {
 
 }
 
+const testToggleTodo = () => {
+  const stateBefore = [{id: 0, text: 'Learn Redux', completed: false}];
+  const stateAfter =  [{id: 0, text: 'Learn Redux', completed: true}];
+
+  const action = {
+    type: 'TOGGLE_TODO',
+  }
+
+  expect(
+    todos(stateBefore, action)
+  ).toEqual(stateBefore);
+
+
+  console.log("Test passed: TOGGLE_TODO")
+
+}
+
+
+
 
 testAddTodo();
+testToggleTodo();

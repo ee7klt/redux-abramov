@@ -19,12 +19,28 @@ const todos = (state=[], action) =>{
     ];
     case 'TOGGLE_TODO':
     console.log('TOGGLE_TODO switch selected')
+    //mutating
+    //  const i = state.findIndex(x => x.id === action.id);
+    //  const todo = state[i];
+    //  const newtodo = {...todo, completed: !todo.completed};
+    //  //console.log(newtodo);
+    //  state.splice(i,1,newtodo)
+    // return state;
+
+
+    // non-mutating
      const i = state.findIndex(x => x.id === action.id);
      const todo = state[i];
      const newtodo = {...todo, completed: !todo.completed};
-     //console.log(newtodo);
-     state.splice(i,1,newtodo)
-    return state;
+     return [
+       ...state.slice(0,i),
+       newtodo,
+       ...state.slice(i+1),
+     ]
+
+
+
+
 
 
     // return [
@@ -62,16 +78,25 @@ const testAddTodo = () => {
 }
 
 const testToggleTodo = () => {
-  const stateBefore = [{id: 0, text: 'Learn Redux', completed: false}];
-  const stateAfter =  [{id: 0, text: 'Learn Redux', completed: true}];
+  const stateBefore = [
+    {id: 0, text: 'Learn React', completed: false},
+    {id: 1, text: 'Learn Redux', completed: false},
+    {id: 2, text: 'Learn Relay', completed: false},
+  ];
+  const stateAfter = [
+    {id: 0, text: 'Learn React', completed: false},
+    {id: 1, text: 'Learn Redux', completed: true},
+    {id: 2, text: 'Learn Relay', completed: false},
+  ];
 
   const action = {
     type: 'TOGGLE_TODO',
-    id:0,
+    id:1,
   }
 
   //console.log(todos(stateBefore,action)[0])
-
+  deepFreeze(stateBefore);
+  deepFreeze(action);
   expect(
     todos(stateBefore, action)
   ).toEqual(stateAfter);

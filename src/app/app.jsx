@@ -29,23 +29,25 @@ const todos = (state=[], action) =>{
 
 
     // non-mutating
-     const i = state.findIndex(x => x.id === action.id);
-     const todo = state[i];
-     const newtodo = {...todo, completed: !todo.completed};
-     return [
-       ...state.slice(0,i),
-       newtodo,
-       ...state.slice(i+1),
-     ]
+    const i = state.findIndex(x => x.id === action.id);
+    if (i !== -1) {
 
-
-
-
-
+    const todo = state[i];
+    const newtodo = {...todo, completed: !todo.completed};
+    return [
+      ...state.slice(0,i),
+      newtodo,
+      ...state.slice(i+1),
+    ]
+  }
+  
+    else return state;
 
     // return [
     //   ...state, {state[action.id]}
     // ];
+
+
     default:
     console.log('default switch selected')
     return state;
@@ -100,6 +102,18 @@ const testToggleTodo = () => {
   expect(
     todos(stateBefore, action)
   ).toEqual(stateAfter);
+
+  const action2 = {
+    type: 'TOGGLE_TODO',
+    id:4,
+  }
+
+  expect(
+    todos(stateBefore,action2)
+  ).toEqual(stateBefore)
+
+
+
 
 
   console.log("Test passed: TOGGLE_TODO")

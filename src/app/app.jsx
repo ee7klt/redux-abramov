@@ -2,6 +2,30 @@ import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 
 
+
+const todo = (state = {} ,action) => {
+  switch (action.type) {
+
+    case 'ADD_TODO':
+      console.log('ADD_TODO switch selected')
+    return {
+      id: action.id, text: action.text, completed: false,
+    };
+
+    case 'TOGGLE_TODO':
+      console.log('TOGGLE_TODO switch selected')
+    return {
+      ...state, completed: !todo.completed,
+    };
+
+    default:
+    console.log('DEFAULT switch selected')
+    return state;
+
+  }
+
+}
+
 // reducer: pure function that takes previous state of application
 // and action being dispatched
 // and returns the next state of the app
@@ -15,10 +39,10 @@ const todos = (state=[], action) =>{
 
     return [
       ...state,
-      {id: action.id, text: action.text, completed: false},
+      todo({},action),
     ];
     case 'TOGGLE_TODO':
-    console.log('TOGGLE_TODO switch selected')
+
     //mutating
     //  const i = state.findIndex(x => x.id === action.id);
     //  const todo = state[i];
@@ -29,29 +53,40 @@ const todos = (state=[], action) =>{
 
 
     // non-mutating
-    const i = state.findIndex(x => x.id === action.id);
-    if (i !== -1) {
-
-    const todo = state[i];
-    const newtodo = {...todo, completed: !todo.completed};
-    return [
-      ...state.slice(0,i),
-      newtodo,
-      ...state.slice(i+1),
-    ]
-  }
-  
-    else return state;
-
+    // const i = state.findIndex(x => x.id === action.id);
+    // if (i !== -1) {
+    //
+    // const todo = state[i];
+    // const newtodo = {...todo, completed: !todo.completed};
     // return [
-    //   ...state, {state[action.id]}
-    // ];
+    //   ...state.slice(0,i),
+    //   newtodo,
+    //   ...state.slice(i+1),
+    // ]
+    //}
+    // else return state;
 
 
-    default:
-    console.log('default switch selected')
-    return state;
-  }
+    // non-mutating with map
+    return state.map( e => {
+      if (e.id !== action.id) {
+        return todo;
+      }
+      return {
+        ...e, completed: !e.completed,
+      };
+
+    })
+
+
+
+
+
+
+  default:
+  console.log('default switch selected')
+  return state;
+}
 }
 
 

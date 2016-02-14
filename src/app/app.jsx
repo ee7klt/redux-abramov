@@ -7,18 +7,18 @@ const todo = (state = {} ,action) => {
   switch (action.type) {
 
     case 'ADD_TODO':
-
     return {
       id: action.id, text: action.text, completed: false,
     };
 
     case 'TOGGLE_TODO':
-
+    if (state.id !== action.id) {
+      return state;
+    }
     return {
-      ...state, completed: !todo.completed,
+      ...state, completed: !state.completed,
     };
 
-  
 
   }
 
@@ -34,57 +34,21 @@ const todos = (state=[], action) =>{
 
   switch (action.type) {
     case 'ADD_TODO':
-      console.log('ADD_TODO switch selected')
+    console.log('ADD_TODO switch selected')
     return [
       ...state,
       todo({},action),
     ];
+
     case 'TOGGLE_TODO':
-  console.log('TOGGLE_TODO switch selected')
-    //mutating
-    //  const i = state.findIndex(x => x.id === action.id);
-    //  const todo = state[i];
-    //  const newtodo = {...todo, completed: !todo.completed};
-    //  //console.log(newtodo);
-    //  state.splice(i,1,newtodo)
-    // return state;
+    console.log('TOGGLE_TODO switch selected')
 
+    return state.map( t => todo(t, action))
 
-    // non-mutating
-    // const i = state.findIndex(x => x.id === action.id);
-    // if (i !== -1) {
-    //
-    // const todo = state[i];
-    // const newtodo = {...todo, completed: !todo.completed};
-    // return [
-    //   ...state.slice(0,i),
-    //   newtodo,
-    //   ...state.slice(i+1),
-    // ]
-    //}
-    // else return state;
-
-
-    // non-mutating with map
-    return state.map( todo => {
-      if (todo.id !== action.id) {
-        return todo;
-      }
-      return {
-        ...todo, completed: !todo.completed,
-      };
-
-    })
-
-
-
-
-
-
-  default:
-  console.log('default switch selected')
-  return state;
-}
+    default:
+    console.log('default switch selected')
+    return state;
+  }
 }
 
 

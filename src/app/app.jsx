@@ -84,6 +84,7 @@ const todoApp = (
 
 const store = createStore(todoApp);
 
+
 console.log('Initial state:');
 console.log(store.getState());
 console.log('----------');
@@ -120,6 +121,16 @@ store.dispatch({
 console.log('Current state');
 console.log(store.getState());
 console.log('----------');
+
+console.log('Dispatching SET_VISIBILITY_FILTER');
+store.dispatch({
+  type:'SET_VISIBILITY_FILTER',
+  filter: 'SHOW_COMPLETED',
+});
+console.log('Current state');
+console.log(store.getState());
+console.log('----------');
+
 
 const testAddTodo = () => {
   const stateBefore = [];
@@ -190,3 +201,12 @@ const testToggleTodo = () => {
 
 testAddTodo();
 testToggleTodo();
+
+// console.log(store.subscribe)
+//
+// for(let prop in store) {
+//     if (store.hasOwnProperty(prop)) {
+//         // handle prop as required
+//         console.log(prop)
+//     }
+// }

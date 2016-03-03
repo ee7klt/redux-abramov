@@ -1,6 +1,7 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
+import {combineReducers} from 'redux';
 
 
 
@@ -66,21 +67,13 @@ const visibilityFilter = (
   }
 }
 
-const todoApp = (
-  state = {},
-  action
-) => {
-  return {
-    todos: todos (
-      state.todos,
-      action
-    ),
-    visibilityFilter: visibilityFilter (
-      state.visibilityFilter,
-      action
-    ),
-  }
-}
+
+const todoApp = combineReducers({
+  todos: todos,
+  visibilityFilter: visibilityFilter,
+})
+
+
 
 const store = createStore(todoApp);
 
@@ -199,8 +192,8 @@ const testToggleTodo = () => {
 
 
 
-testAddTodo();
-testToggleTodo();
+//testAddTodo();
+//testToggleTodo();
 
 // console.log(store.subscribe)
 //

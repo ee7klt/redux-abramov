@@ -68,9 +68,31 @@ const visibilityFilter = (
 }
 
 
+const combineReducers2  = (reducers) => {
+   Object.keys(reducers).map(
+     x=>console.log(reducers[x]('a'))
+   )
+
+
+   return (state,action) => {
+     console.log(Object.keys(reducers)[0]);
+  }
+}
+
+let obj = {statefield1: x => console.log(x+'1'),statefield2:x => console.log(x+'2')}
+const moshi = combineReducers2(obj);
+moshi(1,2);
+
+
+
+
+
+// todoApp is still a reducer
+// so it'll have to take arguments (state, action)
+// combineReducers returns a reducer function.
 const todoApp = combineReducers({
-  todos: todos,
-  visibilityFilter: visibilityFilter,
+  todos,
+  visibilityFilter,
 })
 
 

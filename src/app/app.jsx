@@ -67,21 +67,27 @@ const visibilityFilter = (
   }
 }
 
-
+// combineReducers2 should return a reducer
+//  that takes state and action arguments
+//  that returns a state with keys corresponding to keys in 'reducers'
+//  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
 const combineReducers2  = (reducers) => {
-   Object.keys(reducers).map(
-     x=>console.log(reducers[x]('a'))
-   )
 
-
+  
    return (state,action) => {
-     console.log(Object.keys(reducers)[0]);
+    let temp = {};
+    for (i in reducers) {
+      let key = Object.keys(reducers)[i];
+      temp[key] =  reducers[i](state,action)
+    }
+    return temp;
+     
   }
 }
 
-let obj = {statefield1: x => console.log(x+'1'),statefield2:x => console.log(x+'2')}
-const moshi = combineReducers2(obj);
-moshi(1,2);
+//let obj = {statefield1: x => console.log(x+'1'),statefield2:x => console.log(x+'2')}
+//const moshi = combineReducers2(obj);
+//moshi(1,2);
 
 
 

@@ -1,7 +1,7 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
-import {combineReducers} from 'redux';
+//import {combineReducers} from 'redux';
 
 
 
@@ -71,14 +71,13 @@ const visibilityFilter = (
 //  that takes state and action arguments
 //  that returns a state with keys corresponding to keys in 'reducers'
 //  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
-const combineReducers2  = (reducers) => {
+const combineReducers  = (reducers) => {
 
   
    return (state,action) => {
     let temp = {};
     for (i in reducers) {
-      let key = Object.keys(reducers)[i];
-      temp[key] =  reducers[i](state,action)
+      temp[i] =  reducers[i](state,action)
     }
     return temp;
      

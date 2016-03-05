@@ -67,29 +67,31 @@ const visibilityFilter = (
   }
 }
 
-// combineReducers2 should return a reducer
+// combineReducers should return a reducer
 //  that takes state and action arguments
 //  that returns a state with keys corresponding to keys in 'reducers'
 //  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
 const combineReducers  = (reducers) => {
-
-  
    return (state,action) => {
     let temp = {};
-    for (i in reducers) {
+    for (let i in reducers) {
+      console.log(i)
       temp[i] =  reducers[i](state,action)
     }
     return temp;
-     
+
   }
 }
 
-//let obj = {statefield1: x => console.log(x+'1'),statefield2:x => console.log(x+'2')}
-//const moshi = combineReducers2(obj);
-//moshi(1,2);
 
 
 
+
+//
+const a = (x) => x+1
+const b = (x) => x+2
+const q = combineReducers({a,b});
+console.log(q(1,2));
 
 
 // todoApp is still a reducer
@@ -132,6 +134,9 @@ console.log(store.getState());
 console.log('----------');
 
 
+// the following causes error with my combineReducers
+// state.map is not a function
+
 console.log('Dispatching TOGGLE_TODO:');
 store.dispatch({
   type: 'TOGGLE_TODO',
@@ -142,14 +147,14 @@ console.log('Current state');
 console.log(store.getState());
 console.log('----------');
 
-console.log('Dispatching SET_VISIBILITY_FILTER');
-store.dispatch({
-  type:'SET_VISIBILITY_FILTER',
-  filter: 'SHOW_COMPLETED',
-});
-console.log('Current state');
-console.log(store.getState());
-console.log('----------');
+// console.log('Dispatching SET_VISIBILITY_FILTER');
+// store.dispatch({
+//   type:'SET_VISIBILITY_FILTER',
+//   filter: 'SHOW_COMPLETED',
+// });
+// console.log('Current state');
+// console.log(store.getState());
+// console.log('----------');
 
 
 const testAddTodo = () => {
@@ -219,8 +224,8 @@ const testToggleTodo = () => {
 
 
 
-//testAddTodo();
-//testToggleTodo();
+testAddTodo();
+testToggleTodo();
 
 // console.log(store.subscribe)
 //

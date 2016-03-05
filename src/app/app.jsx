@@ -1,7 +1,7 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
-//import {combineReducers} from 'redux';
+import {combineReducers} from 'redux';
 
 
 
@@ -71,27 +71,26 @@ const visibilityFilter = (
 //  that takes state and action arguments
 //  that returns a state with keys corresponding to keys in 'reducers'
 //  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
-const combineReducers  = (reducers) => {
-   return (state,action) => {
-    let temp = {};
-    for (let i in reducers) {
-      console.log(i)
-      temp[i] =  reducers[i](state,action)
-    }
-    return temp;
-
-  }
-}
+// const combineReducers  = (reducers) => {
+//    return (state,action) => {
+//     let temp = {};
+//     for (let i in reducers) {
+//       temp[i] =  reducers[i](state,action)
+//     }
+//     return temp;
+//
+//   }
+// }
 
 
 
 
 
 //
-const a = (x) => x+1
-const b = (x) => x+2
-const q = combineReducers({a,b});
-console.log(q(1,2));
+// const a = (x) => x+1
+// const b = (x) => x+2
+// const q = combineReducers2({a,b});
+// console.log(q(1,2));
 
 
 // todoApp is still a reducer
@@ -107,46 +106,34 @@ const todoApp = combineReducers({
 const store = createStore(todoApp);
 
 
-console.log('Initial state:');
-console.log(store.getState());
-console.log('----------');
-
-console.log('Dispatching ADD_TODO:');
-store.dispatch({
-  type: 'ADD_TODO',
-  id: 0,
-  text: 'Learn Redux',
-});
-
-console.log('Current state');
-console.log(store.getState());
-console.log('----------');
-
-console.log('Dispatching ADD_TODO:');
-store.dispatch({
-  type: 'ADD_TODO',
-  id: 1,
-  text: 'Go shopping',
-});
-
-console.log('Current state');
-console.log(store.getState());
-console.log('----------');
-
-
-// the following causes error with my combineReducers
-// state.map is not a function
-
-console.log('Dispatching TOGGLE_TODO:');
-store.dispatch({
-  type: 'TOGGLE_TODO',
-  id:0,
-});
-
-console.log('Current state');
-console.log(store.getState());
-console.log('----------');
-
+// console.log('Initial state:');
+// console.log(store.getState());
+// console.log('----------');
+//
+// console.log('Dispatching ADD_TODO:');
+// store.dispatch({
+//   type: 'ADD_TODO',
+//   id: 0,
+//   text: 'Learn Redux',
+// });
+//
+// console.log('Current state');
+// console.log(store.getState());
+// console.log('----------');
+//
+// console.log('Dispatching ADD_TODO:');
+// store.dispatch({
+//   type: 'ADD_TODO',
+//   id: 1,
+//   text: 'Go shopping',
+// });
+//
+// console.log('Current state');
+// console.log(store.getState());
+// console.log('----------');
+//
+//
+//
 // console.log('Dispatching SET_VISIBILITY_FILTER');
 // store.dispatch({
 //   type:'SET_VISIBILITY_FILTER',
@@ -155,7 +142,53 @@ console.log('----------');
 // console.log('Current state');
 // console.log(store.getState());
 // console.log('----------');
+//
+// // the following causes error with my combineReducers
+// // state.map is not a function
+//
+// console.log('Dispatching TOGGLE_TODO:');
+// store.dispatch({
+//   type: 'TOGGLE_TODO',
+//   id:0,
+// });
+//
+// console.log('Current state');
+// console.log(store.getState());
+// console.log('----------');
 
+
+const testTodoApp = () => {
+  const stateBefore = {
+    todos: [{id: 0, text:'Learn Redux', completed: false}],
+    visibilityFilter: 'SHOW_ALL',
+  };
+
+  // action is an object. with a defined type property.
+  const action = {
+    type: 'ADD_TODO',
+    id: 1,
+    text: 'Go shopping',
+  };
+
+  //console.log(action.type)
+  const stateAfter = {
+    todos: [{id: 0, text:'Learn Redux', completed: false},
+            {id: 1, text:'Go shopping', completed: false},
+            ],
+    visibilityFilter: 'SHOW_ALL',
+  };
+
+  deepFreeze(stateBefore);
+  deepFreeze(action);
+
+  expect(
+    todoApp(stateBefore, action)
+  ).toEqual(stateAfter);
+  console.log("Test passed: todoApp")
+
+}
+
+testTodoApp();
 
 const testAddTodo = () => {
   const stateBefore = [];
@@ -224,8 +257,8 @@ const testToggleTodo = () => {
 
 
 
-testAddTodo();
-testToggleTodo();
+//testAddTodo();
+//testToggleTodo();
 
 // console.log(store.subscribe)
 //

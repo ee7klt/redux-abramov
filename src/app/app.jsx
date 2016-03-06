@@ -1,7 +1,7 @@
 import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
-import {combineReducers} from 'redux';
+//import {combineReducers} from 'redux';
 
 
 
@@ -71,18 +71,40 @@ const visibilityFilter = (
 //  that takes state and action arguments
 //  that returns a state with keys corresponding to keys in 'reducers'
 //  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
-// const combineReducers  = (reducers) => {
-//    return (state,action) => {
-//     let temp = {};
-//     for (let i in reducers) {
-//       temp[i] =  reducers[i](state,action)
-//     }
-//     return temp;
-//
-//   }
+// this is not working: seeming like the todos reducer returns are embedded
+// in the calls to visibilityFilter. try reduce instead.
+const combineReducers  = (reducers) => {
+   return (state,action) => {
+    let temp = {};
+    for (let i in reducers) {
+      temp[i] =  reducers[i](state[i],action)
+    }
+    return temp;
+
+  }
+}
+
+// const combineReducers = (reducers) => {
+//   return (state,action) => Object.keys(reducers).reduce(
+//     (nextState, key) => {
+//       nextState[key] = reducers[key](state[key],action);
+//       //console.log(nextState);
+//       return nextState;
+//     },
+//     {})
 // }
 
 
+//const a = combineReducers({todos,visibilityFilter});
+// console.log(typeof a)
+// const b = a({
+//   todos: [{id: 1, text:'Learn Redux', completed: false}],
+//   visibilityFilter: 'SHOW_ALL',
+// },{
+//   type: 'TOGGLE_TODO',
+//   id:1,
+// });
+// console.log(b);
 
 
 
@@ -103,7 +125,7 @@ const todoApp = combineReducers({
 
 
 
-const store = createStore(todoApp);
+//const store = createStore(todoApp);
 
 
 // console.log('Initial state:');
@@ -170,7 +192,6 @@ const testTodoApp = () => {
     text: 'Go shopping',
   };
 
-  //console.log(action.type)
   const stateAfter = {
     todos: [{id: 0, text:'Learn Redux', completed: false},
             {id: 1, text:'Go shopping', completed: false},

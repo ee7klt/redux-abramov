@@ -2,7 +2,8 @@ import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
 //import {combineReducers} from 'redux';
-
+import {React} from 'react';
+import {reactDOM} from 'react-dom';
 
 
 const todo = (state = {} ,action) => {
@@ -67,53 +68,16 @@ const visibilityFilter = (
   }
 }
 
-// combineReducers should return a reducer
-//  that takes state and action arguments
-//  that returns a state with keys corresponding to keys in 'reducers'
-//  and each key assigned the result of executing sub-reducers of the same name on the state, action arguments
-// this is not working: seeming like the todos reducer returns are embedded
-// in the calls to visibilityFilter. try reduce instead.
-const combineReducers  = (reducers) => {
-   return (state,action) => {
-    let temp = {};
-    for (let i in reducers) {
-      temp[i] =  reducers[i](state[i],action)
-    }
-    return temp;
 
+
+const combineReducers = (reducers) => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce( (nextState,key)  => {
+      nextState[key] = reducers[key](state[key],action);
+      return nextState;
+    }, {})
   }
 }
-
-// const combineReducers = (reducers) => {
-//   return (state,action) => Object.keys(reducers).reduce(
-//     (nextState, key) => {
-//       nextState[key] = reducers[key](state[key],action);
-//       //console.log(nextState);
-//       return nextState;
-//     },
-//     {})
-// }
-
-
-//const a = combineReducers({todos,visibilityFilter});
-// console.log(typeof a)
-// const b = a({
-//   todos: [{id: 1, text:'Learn Redux', completed: false}],
-//   visibilityFilter: 'SHOW_ALL',
-// },{
-//   type: 'TOGGLE_TODO',
-//   id:1,
-// });
-// console.log(b);
-
-
-
-//
-// const a = (x) => x+1
-// const b = (x) => x+2
-// const q = combineReducers2({a,b});
-// console.log(q(1,2));
-
 
 // todoApp is still a reducer
 // so it'll have to take arguments (state, action)
@@ -125,60 +89,8 @@ const todoApp = combineReducers({
 
 
 
-//const store = createStore(todoApp);
 
-
-// console.log('Initial state:');
-// console.log(store.getState());
-// console.log('----------');
-//
-// console.log('Dispatching ADD_TODO:');
-// store.dispatch({
-//   type: 'ADD_TODO',
-//   id: 0,
-//   text: 'Learn Redux',
-// });
-//
-// console.log('Current state');
-// console.log(store.getState());
-// console.log('----------');
-//
-// console.log('Dispatching ADD_TODO:');
-// store.dispatch({
-//   type: 'ADD_TODO',
-//   id: 1,
-//   text: 'Go shopping',
-// });
-//
-// console.log('Current state');
-// console.log(store.getState());
-// console.log('----------');
-//
-//
-//
-// console.log('Dispatching SET_VISIBILITY_FILTER');
-// store.dispatch({
-//   type:'SET_VISIBILITY_FILTER',
-//   filter: 'SHOW_COMPLETED',
-// });
-// console.log('Current state');
-// console.log(store.getState());
-// console.log('----------');
-//
-// // the following causes error with my combineReducers
-// // state.map is not a function
-//
-// console.log('Dispatching TOGGLE_TODO:');
-// store.dispatch({
-//   type: 'TOGGLE_TODO',
-//   id:0,
-// });
-//
-// console.log('Current state');
-// console.log(store.getState());
-// console.log('----------');
-
-
+const store = createStore(todoApp);
 const testTodoApp = () => {
   const stateBefore = {
     todos: [{id: 0, text:'Learn Redux', completed: false}],
@@ -210,82 +122,3 @@ const testTodoApp = () => {
 }
 
 testTodoApp();
-
-const testAddTodo = () => {
-  const stateBefore = [];
-
-  // action is an object. with a defined type property.
-  const action = {
-    type: 'ADD_TODO',
-    id: 0,
-    text: 'Learn Redux',
-  };
-
-  //console.log(action.type)
-  const stateAfter = [{id: 0, text:'Learn Redux', completed: false}];
-
-  deepFreeze(stateBefore);
-  deepFreeze(action);
-
-  expect(
-    todos(stateBefore, action)
-  ).toEqual(stateAfter);
-  console.log("Test passed: ADD_TODO")
-
-}
-
-const testToggleTodo = () => {
-  const stateBefore = [
-    {id: 0, text: 'Learn React', completed: false},
-    {id: 1, text: 'Learn Redux', completed: false},
-    {id: 2, text: 'Learn Relay', completed: false},
-  ];
-  const stateAfter = [
-    {id: 0, text: 'Learn React', completed: false},
-    {id: 1, text: 'Learn Redux', completed: true},
-    {id: 2, text: 'Learn Relay', completed: false},
-  ];
-
-  const action = {
-    type: 'TOGGLE_TODO',
-    id:1,
-  }
-
-  //console.log(todos(stateBefore,action)[0])
-  deepFreeze(stateBefore);
-  deepFreeze(action);
-  expect(
-    todos(stateBefore, action)
-  ).toEqual(stateAfter);
-
-  const action2 = {
-    type: 'TOGGLE_TODO',
-    id:4,
-  }
-
-  expect(
-    todos(stateBefore,action2)
-  ).toEqual(stateBefore)
-
-
-
-
-
-  console.log("Test passed: TOGGLE_TODO")
-
-}
-
-
-
-
-//testAddTodo();
-//testToggleTodo();
-
-// console.log(store.subscribe)
-//
-// for(let prop in store) {
-//     if (store.hasOwnProperty(prop)) {
-//         // handle prop as required
-//         console.log(prop)
-//     }
-// }

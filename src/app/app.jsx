@@ -2,9 +2,9 @@ import expect, { createSpy, spyOn, isSpy } from 'expect';
 import deepFreeze from 'deep-freeze';
 import {createStore} from 'redux';
 //import {combineReducers} from 'redux';
-import {React} from 'react';
-import {reactDOM} from 'react-dom';
-
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Component} from 'react';
 
 const todo = (state = {} ,action) => {
   switch (action.type) {
@@ -87,10 +87,51 @@ const todoApp = combineReducers({
   visibilityFilter,
 })
 
+let nextTodoId = 0;
+let arr = ['a','b','c'];
 
+class TodoApp extends Component {
 
+  render() {
+    console.log(this.props.todos[0])
+    return (
+      <div>
+        <button onClick = {() => {
+            store.dispatch({
+              type: 'ADD_TODO',
+              text: 'Test',
+              id: nextTodoId++,
+            });
+          }}>Add Todo</button>
+        <ul>
+          {this.props.todos.map(todo => {
+            return <li key = {todo.id}>
+              {todo.text}
+            </li>
+          })}
+        </ul>
+      </div>
+    )
+  }
+}
 
 const store = createStore(todoApp);
+
+const render = () => {
+  console.log("render triggered")
+  ReactDOM.render(
+    <TodoApp todos = {store.getState().todos}/>,
+    document.getElementById('root')
+  );
+};
+
+store.subscribe(render);
+render();
+
+
+
+
+
 const testTodoApp = () => {
   const stateBefore = {
     todos: [{id: 0, text:'Learn Redux', completed: false}],

@@ -46,7 +46,7 @@ const todos = (state=[], action) =>{
     ];
 
     case 'TOGGLE_TODO':
-    console.log('TOGGLE_TODO switch selected')
+    console.log('TOGGLE_TODO switch selected ',action.id)
 
     return state.map( t => todo(t, action))
 
@@ -109,7 +109,15 @@ class TodoApp extends Component {
           }}>Add Todo</button>
         <ul>
           {this.props.todos.map(todo => {
-            return <li key = {todo.id}>
+            let id = todo.id;
+            return <li key = {todo.id} onClick = {() => {
+                //event.currentTarget.style('text-decoration') = 'underline';
+                store.dispatch({
+                  type: 'TOGGLE_TODO',
+                  id: id,
+                })
+
+              }}>
               {todo.text}
             </li>
           })}

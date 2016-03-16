@@ -109,14 +109,17 @@ class TodoApp extends Component {
           }}>Add Todo</button>
         <ul>
           {this.props.todos.map(todo => {
-            let id = todo.id;
-            return <li key = {todo.id} onClick = {() => {
-                //event.currentTarget.style('text-decoration') = 'underline';
+
+            return <li key = {todo.id}  onClick = {() => {
                 store.dispatch({
                   type: 'TOGGLE_TODO',
-                  id: id,
+                  id: todo.id,
                 })
 
+              }}
+              style = {{
+                textDecoration:
+                  todo.completed ? 'line-through' : 'none',
               }}>
               {todo.text}
             </li>

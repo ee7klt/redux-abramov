@@ -51,7 +51,7 @@ const todos = (state=[], action) =>{
     return state.map( t => todo(t, action))
 
     default:
-    console.log('default switch selected')
+    console.log('TODOS: default switch selected')
     return state;
   }
 }
@@ -62,13 +62,56 @@ const visibilityFilter = (
 ) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
-      return action.filter;
+    console.log('filter is now ', action.filter)
+    return action.filter;
     default:
-      return state;
+    return state;
   }
 }
 
 
+
+// a single filter link
+// omit value name 'filter' because of es6 object literal shorthand
+// filter: SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE
+// children: All, Completed, Active
+// filter, children are destructured props (see 0.14 changelog)
+const FilterLink = ({
+  filter,
+  children,
+}) => {
+  return (
+    <a href='#' onClick = { e => {
+        e.preventDefault();
+        store.dispatch({
+          type: 'SET_VISIBILITY_FILTER',
+          filter,
+        })
+      }
+    }>{children}</a>
+  )
+}
+
+
+// filter out the visibile todos based on visibilityFilter state
+
+const getVisibleTodos = (todos, filter) => {
+switch (filter) {
+  case 'SHOW_ALL':
+  console.log('getting ALL todos')
+  return todos
+  case 'SHOW_COMPLETED':
+   console.log('getting COMPLETED todos')
+    return todos.filter(t => {
+      return t.completed
+    })
+  case 'SHOW_ACTIVE':
+  console.log('getting ACTIVE todos')
+   return todos.filter(t => {return !t.completed})
+  default:
+    return todos;
+  }
+}
 
 const combineReducers = (reducers) => {
   return (state = {}, action) => {
@@ -88,93 +131,118 @@ const todoApp = combineReducers({
 })
 
 let nextTodoId = 0;
-let arr = ['a','b','c'];
-
 class TodoApp extends Component {
 
   render() {
-    console.log(this.props.todos[0])
     return (
       <div>
         <input ref = {node => {
             this.input = node;
           }} />
-        <button onClick = {() => {
-            store.dispatch({
-              type: 'ADD_TODO',
-              text: this.input.value,
-              id: nextTodoId++,
-            });
-            this.input.value='';
-          }}>Add Todo</button>
-        <ul>
-          {this.props.todos.map(todo => {
+          <button onClick = {() => {
+              store.dispatch({
+                type: 'ADD_TODO',
+                text: this.input.value,
+                id: nextTodoId++,
+              });
+              this.input.value='';
+            }}>Add Todo</button>
+            <ul>
+              {this.props.todos.map(todo => {
 
-            return <li key = {todo.id}  onClick = {() => {
-                store.dispatch({
-                  type: 'TOGGLE_TODO',
-                  id: todo.id,
-                })
+                return <li key = {todo.id}  onClick = {() => {
+                    store.dispatch({
+                      type: 'TOGGLE_TODO',
+                      id: todo.id,
+                    })
 
-              }}
-              style = {{
-                textDecoration:
-                  todo.completed ? 'line-through' : 'none',
-              }}>
-              {todo.text}
-            </li>
-          })}
-        </ul>
-      </div>
-    )
+                  }}
+                  style = {{
+                    textDecoration:
+                    todo.completed ? 'line-through' : 'none',
+                  }}>
+                  {todo.text}
+                </li>
+              })}
+            </ul>
+            <p>
+              Show:
+              {'  '}
+              <FilterLink filter = 'SHOW_ALL' children = 'All' />
+              {'  '}
+              <FilterLink filter = 'SHOW_COMPLETED' children = 'Completed' />
+              {'  '}
+              <FilterLink filter = 'SHOW_ACTIVE' children = 'Active' />
+            </p>
+          </div>
+        )
+      }
+    }
+
+    const store = createStore(todoApp);
+
+    const render = () => {
+      console.log("render triggered")
+      ReactDOM.render(
+        <TodoApp todos = {
+            getVisibleTodos(
+              store.getState().todos,
+              store.getState().visibilityFilter
+            )
+          }/>,
+        document.getElementById('root')
+      );
+    };
+
+    store.subscribe(render);
+    render();
+
+
+const testGetVisibleTodos = () => {
+  const todos =  [
+      {id: 0, text:'Learn Redux', completed: false},
+      {id: 0, text:'Learn Relay', completed: true},
+    ]
+
+  const  filtered = [{id: 0, text:'Learn Relay', completed: true}]
+
+  deepFreeze(todos);
+  expect(getVisibleTodos(todos, 'SHOW_COMPLETED'))
+    .toEqual(filtered);
+  console.log('getVisibleTodos passed')
+
+}
+testGetVisibleTodos();
+
+
+    const testTodoApp = () => {
+      const stateBefore = {
+        todos: [{id: 0, text:'Learn Redux', completed: false}],
+        visibilityFilter: 'SHOW_ALL',
+      };
+
+      // action is an object. with a defined type property.
+      const action = {
+        type: 'ADD_TODO',
+        id: 1,
+        text: 'Go shopping',
+      };
+
+      const stateAfter = {
+        todos: [{id: 0, text:'Learn Redux', completed: false},
+        {id: 1, text:'Go shopping', completed: false},
+      ],
+      visibilityFilter: 'SHOW_ALL',
+    };
+
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+
+    expect(
+      todoApp(stateBefore, action)
+    ).toEqual(stateAfter);
+    console.log("Test passed: todoApp")
+
   }
-}
 
-const store = createStore(todoApp);
-
-const render = () => {
-  console.log("render triggered")
-  ReactDOM.render(
-    <TodoApp todos = {store.getState().todos}/>,
-    document.getElementById('root')
-  );
-};
-
-store.subscribe(render);
-render();
-
-
-
-
-
-const testTodoApp = () => {
-  const stateBefore = {
-    todos: [{id: 0, text:'Learn Redux', completed: false}],
-    visibilityFilter: 'SHOW_ALL',
-  };
-
-  // action is an object. with a defined type property.
-  const action = {
-    type: 'ADD_TODO',
-    id: 1,
-    text: 'Go shopping',
-  };
-
-  const stateAfter = {
-    todos: [{id: 0, text:'Learn Redux', completed: false},
-            {id: 1, text:'Go shopping', completed: false},
-            ],
-    visibilityFilter: 'SHOW_ALL',
-  };
-
-  deepFreeze(stateBefore);
-  deepFreeze(action);
-
-  expect(
-    todoApp(stateBefore, action)
-  ).toEqual(stateAfter);
-  console.log("Test passed: todoApp")
-
-}
-
-testTodoApp();
+  testTodoApp();

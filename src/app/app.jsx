@@ -134,6 +134,11 @@ let nextTodoId = 0;
 class TodoApp extends Component {
 
   render() {
+    console.log(store.getState());
+    const visibleTodos = getVisibleTodos(
+      this.props.todos,
+      this.props.visibilityFilter
+    );
     return (
       <div>
         <input ref = {node => {
@@ -148,7 +153,7 @@ class TodoApp extends Component {
               this.input.value='';
             }}>Add Todo</button>
             <ul>
-              {this.props.todos.map(todo => {
+              {visibleTodos.map(todo => {
 
                 return <li key = {todo.id}  onClick = {() => {
                     store.dispatch({
@@ -184,12 +189,9 @@ class TodoApp extends Component {
     const render = () => {
       console.log("render triggered")
       ReactDOM.render(
-        <TodoApp todos = {
-            getVisibleTodos(
-              store.getState().todos,
-              store.getState().visibilityFilter
-            )
-          }/>,
+        <TodoApp
+          {...store.getState()}
+          />,
         document.getElementById('root')
       );
     };

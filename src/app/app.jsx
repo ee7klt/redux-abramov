@@ -88,7 +88,11 @@ const FilterLink = ({
           filter,
         })
       }
-    }>{children}</a>
+    }
+    style = {{
+      fontWeight: (filter === store.getState().visibilityFilter) ? 'bold':'',
+    }}
+    >{children}</a>
   )
 }
 
@@ -130,11 +134,16 @@ const todoApp = combineReducers({
   visibilityFilter,
 })
 
+const log = () => {
+  console.log('rendering...');
+}
+
 let nextTodoId = 0;
 class TodoApp extends Component {
 
   render() {
-    console.log(store.getState());
+    //console.log(store.getState());
+    log();
     const visibleTodos = getVisibleTodos(
       this.props.todos,
       this.props.visibilityFilter
@@ -187,7 +196,7 @@ class TodoApp extends Component {
     const store = createStore(todoApp);
 
     const render = () => {
-      console.log("render triggered")
+      //console.log("render triggered")
       ReactDOM.render(
         <TodoApp
           {...store.getState()}

@@ -79,8 +79,17 @@ const visibilityFilter = (
 const FilterLink = ({
   filter,
   children,
+  currentFilter,
 }) => {
-  return (
+
+  if (filter === currentFilter) {
+    return (
+      <span>
+        {children}
+      </span>
+    )
+  }
+  else return (
     <a href='#' onClick = { e => {
         e.preventDefault();
         store.dispatch({
@@ -89,9 +98,7 @@ const FilterLink = ({
         })
       }
     }
-    style = {{
-      fontWeight: (filter === store.getState().visibilityFilter) ? 'bold':'',
-    }}
+
     >{children}</a>
   )
 }
@@ -144,9 +151,13 @@ class TodoApp extends Component {
   render() {
     //console.log(store.getState());
     log();
+    const {
+      todos,
+      visibilityFilter,
+    } = this.props;
     const visibleTodos = getVisibleTodos(
-      this.props.todos,
-      this.props.visibilityFilter
+      todos,
+      visibilityFilter
     );
     return (
       <div>
@@ -182,11 +193,11 @@ class TodoApp extends Component {
             <p>
               Show:
               {'  '}
-              <FilterLink filter = 'SHOW_ALL' children = 'All' />
+              <FilterLink filter = 'SHOW_ALL' children = 'All' currentFilter = {visibilityFilter} />
               {'  '}
-              <FilterLink filter = 'SHOW_COMPLETED' children = 'Completed' />
+              <FilterLink filter = 'SHOW_COMPLETED' children = 'Completed'  currentFilter = {visibilityFilter} />
               {'  '}
-              <FilterLink filter = 'SHOW_ACTIVE' children = 'Active' />
+              <FilterLink filter = 'SHOW_ACTIVE' children = 'Active'  currentFilter = {visibilityFilter} />
             </p>
           </div>
         )

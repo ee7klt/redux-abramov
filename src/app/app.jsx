@@ -103,7 +103,24 @@ const FilterLink = ({
   )
 }
 
+// return the filterlinks presentational component
 
+const Footer = ({
+  visibilityFilter,
+}) => {
+  return   <p>
+      Show:
+      {'  '}
+      <FilterLink filter = 'SHOW_ALL' children = 'All' currentFilter = {visibilityFilter} />
+      {'  '}
+      <FilterLink filter = 'SHOW_COMPLETED' children = 'Completed'  currentFilter = {visibilityFilter} />
+      {'  '}
+      <FilterLink filter = 'SHOW_ACTIVE' children = 'Active'  currentFilter = {visibilityFilter} />
+    </p>
+}
+
+// Todo presentational component
+// onClick is left general
 const Todo = ({
   onClick,
   completed,
@@ -120,7 +137,8 @@ const Todo = ({
 };
 
 
-
+// List of todos presentational component
+// pass in id of todo for onClick event to toggle completion
 const TodoList = ({
   todos,
   onTodoClick,
@@ -218,15 +236,8 @@ class TodoApp extends Component {
             }}
             />
 
-            <p>
-              Show:
-              {'  '}
-              <FilterLink filter = 'SHOW_ALL' children = 'All' currentFilter = {visibilityFilter} />
-              {'  '}
-              <FilterLink filter = 'SHOW_COMPLETED' children = 'Completed'  currentFilter = {visibilityFilter} />
-              {'  '}
-              <FilterLink filter = 'SHOW_ACTIVE' children = 'Active'  currentFilter = {visibilityFilter} />
-            </p>
+
+            <Footer visibilityFilter = {visibilityFilter} />
           </div>
         )
       }

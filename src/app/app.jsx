@@ -94,14 +94,13 @@ const AddTodo = ({
     // filter: SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE
     // children: All, Completed, Active
     // filter, children are destructured props (see 0.14 changelog)
-    const FilterLink = ({
-      filter,
+    const Link = ({
+      active,
       children,
-      currentFilter,
       onClick,
     }) => {
 
-      if (filter === currentFilter) {
+      if (active) {
         return (
           <span>
             {children}
@@ -111,12 +110,32 @@ const AddTodo = ({
       else return (
         <a href='#' onClick = { e => {
             e.preventDefault();
-            onClick(filter)
+            onClick()
           }
         }
 
         >{children}</a>
     )
+  }
+
+
+  class FilterLink extends Component {
+    render() {
+
+      const props = this.props;
+      const state = store.getState();
+      return (
+    <Link
+      active = {props.filter === state.visibilityFilter}
+      onClick = {store.dispatch({
+        type: 'SET_VISIBILITY_FILTER',
+        filter: props.filter,
+      })},
+      {props.children}
+      />
+      )
+    }
+
   }
 
   // return the filterlinks presentational component

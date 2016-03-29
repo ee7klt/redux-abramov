@@ -206,6 +206,34 @@
   </ul>
 
   };
+
+
+  class VisibleTodoList extends Component {
+    render() {
+      const state = store.getState();
+      const todos = state.todos;
+      const visibilityFilter = state.visibilityFilter;
+      return (
+        <div>
+
+          <TodoList
+          todos = {getVisibleTodos(
+            todos,
+            visibilityFilter
+          )}
+          onTodoClick = {(id) => {
+            store.dispatch(
+              {
+                type: 'TOGGLE_TODO',
+                id,
+              }
+            )
+          }}
+          />
+      </div>
+      )
+    }
+  }
   // filter out the visibile todos based on visibilityFilter state
 
     const getVisibleTodos = (todos, filter) => {
@@ -263,20 +291,9 @@
         }
       }/>
 
-      <TodoList
-      todos = {getVisibleTodos(
-        todos,
-        visibilityFilter
-      )}
-      onTodoClick = {(id) => {
-        store.dispatch(
-          {
-            type: 'TOGGLE_TODO',
-            id,
-          }
-        )
-      }}
-      />
+
+    <VisibleTodoList />
+    
 
     <Footer />
   </div>
